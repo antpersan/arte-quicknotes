@@ -13,8 +13,10 @@ import com.arte.quicknotes.models.Note;
 
 public class NoteActivity extends AppCompatActivity {
 
+    public static final String PARAM_NOTE = "nota";
     private EditText mTitle;
     private EditText mContent;
+    private Note mNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +24,32 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
 
         setupActivity();
+
+        loadNote();
+    }
+
+    private void loadNote() {
+        Note note = (Note) getIntent().getSerializableExtra(PARAM_NOTE);
+
+        if (note == null) {
+            return;
+        }
+
+        this.mTitle.setText(note.getTitle());
+        this.mContent.setText(note.getContent());
+        mNote = note;
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_note, menu);
+
+        if (mNote == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+
         return true;
     }
 
@@ -36,17 +59,39 @@ public class NoteActivity extends AppCompatActivity {
             case R.id.action_save:
                 saveNote();
                 return true;
+            case R.id.action_delete:
+                deleteNote();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void saveNote() {
-        Note note = new Note();
-        note.setTitle(mTitle.getText().toString());
-        note.setContent(mContent.getText().toString());
+    private void deleteNote() {
 
-        MockNoteList.addNote(note);
+        if (mNote != null) {
+            MockNoteList.getInstance().delete(mNote);
+        }
+
+        finish();
+    }
+
+
+    private void saveNote() {
+
+        String title = mTitle.getText().toString();
+        String content = mContent.getText().toString();
+
+        if (mNote == null) {
+            Note note = new Note();
+            note.setContent(content);
+            note.setTitle(title);
+            MockNoteList.getInstance().add(note);
+        } else {
+            mNote.setTitle(title);
+            mNote.setContent(content);
+            MockNoteList.getInstance().update(mNote);
+        }
+
 
         finish();
     }

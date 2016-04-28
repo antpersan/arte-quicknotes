@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.arte.quicknotes.MockNoteList;
 import com.arte.quicknotes.R;
 import com.arte.quicknotes.adapters.NotesAdapter;
+import com.arte.quicknotes.models.Note;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,7 +55,17 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.notes_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new NotesAdapter(MockNoteList.getList());
+        mAdapter = new NotesAdapter(MockNoteList.getInstance().getAll(), new NotesAdapter.Events() {
+            @Override
+            public void onNoteClicked(Note note) {
+                Intent intent = new Intent(context, NoteActivity.class);
+                Bundle arguments = new Bundle();
+                arguments.putSerializable(NoteActivity.PARAM_NOTE, note);
+                intent.putExtras(arguments);
+
+                startActivityForResult(intent, 0);
+            }
+        });
 
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(mAdapter);

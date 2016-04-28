@@ -14,7 +14,20 @@ public class MockNoteList implements NotesStorage {
     private static List<Note> noteList;
     private static int nextId = 0;
 
-    public static List<Note> getList() {
+    private static MockNoteList instance = null;
+
+    protected MockNoteList() {
+        // Exists only to defeat instantiation.
+    }
+
+    public static MockNoteList getInstance() {
+        if(instance == null) {
+            instance = new MockNoteList();
+        }
+        return instance;
+    }
+
+    private static List<Note> getList() {
         if (noteList == null) {
             createList();
             //noteList = new ArrayList<>();
@@ -45,7 +58,10 @@ public class MockNoteList implements NotesStorage {
 
     @Override
     public List<Note> getAll() {
-        return getList();
+        if (noteList == null) {
+            noteList = new ArrayList<>();
+        }
+        return noteList;
     }
 
     @Override
@@ -61,11 +77,23 @@ public class MockNoteList implements NotesStorage {
 
     @Override
     public void delete(Note note) {
-        noteList.remove(note);
+        for (Note myNote : getAll()) {
+            if (myNote.getId() == note.getId()) {
+                noteList.remove(myNote);
+                return;
+            }
+        }
+
     }
 
     @Override
     public void update(Note note) {
-
+        for (Note myNote : getAll()) {
+            if (myNote.getId() == note.getId()) {
+                myNote.setTitle(note.getTitle());
+                myNote.setContent(note.getContent());
+                return;
+            }
+        }
     }
 }
