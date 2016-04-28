@@ -2,4 +2,8 @@
     <string name="app_name">Quick Notes</string>
     <string name="title_activity_basic">BasicActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="hola_android">Hello android</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="note.create">Create</string>
 </resources>

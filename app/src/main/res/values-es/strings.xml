@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notas Rápidas</string>
+    <string name="title_activity_basic">Acitvidad Básica</string>
+    <string name="title_activity_main">Actividad Principal</string>
+    <string name="hola_android">Hola Android</string>
+    <string name="title">Título</string>
+    <string name="content">Contenido</string>
+    <string name="note.create">Aceptar</string>
+</resources>
