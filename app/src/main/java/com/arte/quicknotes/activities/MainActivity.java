@@ -11,10 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.arte.quicknotes.MockNoteList;
 import com.arte.quicknotes.R;
 import com.arte.quicknotes.adapters.NotesAdapter;
+import com.arte.quicknotes.database.NotesDataSource;
 import com.arte.quicknotes.models.Note;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.notes_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new NotesAdapter(MockNoteList.getInstance().getAll(), new NotesAdapter.Events() {
+        NotesDataSource storage = new NotesDataSource(this);
+        storage.open();
+        List<Note> notes = storage.getAll();
+        storage.close();
+        mAdapter = new NotesAdapter(notes, new NotesAdapter.Events() {
             @Override
             public void onNoteClicked(Note note) {
                 Intent intent = new Intent(context, NoteActivity.class);
@@ -75,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        NotesDataSource storage = new NotesDataSource(this);
+        storage.open();
+        List<Note> notes = storage.getAll();
+        storage.close();
+        mAdapter.setNoteList(notes);
         mAdapter.notifyDataSetChanged();
     }
 }

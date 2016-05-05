@@ -19,4 +19,6 @@ public interface NotesStorage {
 
     void update(Note note);
 
+    void deleteAllNotes();
+
 }

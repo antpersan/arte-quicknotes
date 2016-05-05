@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.arte.quicknotes.MockNoteList;
 import com.arte.quicknotes.R;
+import com.arte.quicknotes.database.NotesDataSource;
 import com.arte.quicknotes.models.Note;
 
 public class NoteActivity extends AppCompatActivity {
@@ -68,8 +68,11 @@ public class NoteActivity extends AppCompatActivity {
 
     private void deleteNote() {
 
+        NotesDataSource storage = new NotesDataSource(this);
         if (mNote != null) {
-            MockNoteList.getInstance().delete(mNote);
+            storage.open();
+            storage.delete(mNote);
+            storage.close();
         }
 
         finish();
@@ -80,19 +83,21 @@ public class NoteActivity extends AppCompatActivity {
 
         String title = mTitle.getText().toString();
         String content = mContent.getText().toString();
-
+        NotesDataSource storage = new NotesDataSource(this);
+        storage.open();
         if (mNote == null) {
+
             Note note = new Note();
             note.setContent(content);
             note.setTitle(title);
-            MockNoteList.getInstance().add(note);
+            storage.add(note);
         } else {
             mNote.setTitle(title);
             mNote.setContent(content);
-            MockNoteList.getInstance().update(mNote);
+            storage.update(mNote);
         }
 
-
+        storage.close();
         finish();
     }
 

@@ -29,6 +29,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         mEvens = events;
     }
 
+    public void setNoteList(List<Note> notes) {
+        mNoteList = notes;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.notes_item, parent, false);
